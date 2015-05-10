@@ -1,0 +1,15 @@
+dat <- fread("household_power_consumption.txt")
+dat$Date <- as.Date(dat$Date, format="%d/%m/%Y")
+data <- dat[dat$Date>=as.Date("2007-02-01") & dat$Date<=as.Date("2007-02-02")]
+DateTime <- strptime(paste(data$Date, data$Time), format="%Y-%m-%d %H:%M:%S")
+data <- cbind(data, DateTime)
+data$Sub_metering_1 <- as.numeric(data$Sub_metering_1)
+data$Sub_metering_2 <- as.numeric(data$Sub_metering_2)
+png("plot3.png")
+par(mar=c(3,4,2,2))
+with(data, plot(DateTime, Sub_metering_1, type="l", ylab="Energy sub metering")) 
+lines(data$DateTime, data$Sub_metering_2, type="l", col="red")
+lines(data$DateTime, data$Sub_metering_3, type="l", col="blue")
+legend("topright", lwd=c(2.5,2.5), col=c("black","red","blue"), legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+dev.off()
+
